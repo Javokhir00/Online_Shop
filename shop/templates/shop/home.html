@@ -1,6 +1,5 @@
 {% load static %}
 
-
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -14,7 +13,7 @@
         <!-- Bootstrap icons-->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
         <!-- Core theme CSS (includes Bootstrap)-->
-        <link href=" {% static 'shop/css/styles.css' %} " rel="stylesheet" />
+        <link href="{% static 'shop/css/styles.css' %}" rel="stylesheet" />
     </head>
     <body>
         <!-- Navigation-->
@@ -41,7 +40,7 @@
                         <button class="btn btn-outline-dark" type="submit">
                             <i class="bi-search-fill me-1"></i>
                             Search
-                           
+
                         </button>
                     </form>
                 </div>
@@ -84,9 +83,14 @@
                         <div class="col mb-5">
                             <div class="card h-100">
                                 <!-- Sale badge-->
-                                <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
+                                {% if product.discount %}
+                                    <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
+                                {%endif%}
+
                                 <!-- Product image-->
-                                    <img class="card-img-top" src="{{product.image.url}}" alt="..." />
+                                <a href="{% url 'product_detail' product.id %}">
+                                    <img class="card-img-top" src="{{product.get_absolute_url}}" alt="..." />
+                                </a>
                                 <!-- Product details-->
                                 <div class="card-body p-4">
                                     <div class="text-center">
@@ -101,15 +105,19 @@
                                             <div class="bi-star-fill"></div>
                                         </div>
                                         <!-- Product price-->
-                                        <span class="text-muted text-decoration-line-through">{{product.price}} sum</span>
-                                        {{product.discounted_price}} sum
+                                        {%if product.discount%}
+                                            <span class="text-muted text-decoration-line-through">${{product.price}}</span>
+                                            ${{product.discounted_price}}
+                                        {%else%}
+                                            ${{product.discounted_price}}
+                                        {%endif%}
                                     </div>
                                 </div>
                                 <!-- Product actions-->
                                 <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                    <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="detail.html">View product</a></div>
-                                
-                                    
+                                    <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="{% url 'product_detail' product.id %}">View product</a></div>
+
+
                                 </div>
                             </div>
                         </div>
@@ -124,6 +132,6 @@
         <!-- Bootstrap core JS-->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Core theme JS-->
-        <script src=" {% static 'shop/js/scripts.js' %} "></script>
+        <script src="{% static 'shop/js/scripts.js' %}"></script>
     </body>
 </html>

@@ -8,7 +8,10 @@ class Category(models.Model):
 
     def __str__(self):
         return self.title
-    
+
+    class Meta:
+        verbose_name_plural = 'Categories'
+        verbose_name = 'Category'
 
 
 
@@ -29,4 +32,14 @@ class Product(models.Model):
         if self.discount > 0:
             return self.price * Decimal(f'{1 - (self.discount / 100)}')
         return self.price
+
+    @property
+    def get_absolute_url(self):
+        if self.image:
+            return self.image.url
+        return ''
+
+    class Meta:
+        verbose_name_plural = 'Products'
+        verbose_name = 'Product'
 

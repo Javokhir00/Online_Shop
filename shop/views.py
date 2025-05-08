@@ -1,5 +1,5 @@
 from django.shortcuts import render
-
+from django.http import HttpResponse
 from shop.models import Product
 
 
@@ -11,6 +11,11 @@ def index(request):
     return render(request, 'shop/home.html', context)
 
 
-def view(request):
-    context =  {'product_details': product}
-    return render(request, 'shop/product_view.html', context)
+def product_detail(request, product_id):
+    try:
+        product = Product.objects.get(id=product_id)
+        context = {'product': product}
+        return render(request, 'shop/detail.html', context)
+
+    except Product.DoesNotExist:
+        return HttpResponse('Product Not Found')
