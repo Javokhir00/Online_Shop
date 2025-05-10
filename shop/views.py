@@ -1,13 +1,25 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
-from shop.models import Product
+from shop.models import Product, Category
 
 
 # Create your views here.
 
-def index(request):
-    products = Product.objects.all()
-    context = {'products': products}
+def index(request, category_id = None):
+    search_query = request.GET.get('q', '')
+    categories = Category.objects.all()
+
+    if category_id:
+        products = Product.objects.filter(category = category_id)
+    else:
+        products = Product.objects.all() #.order_by('price')
+
+    if search_query:
+        products = products.filter(name__icontains = search_query)
+
+
+
+    context = {'products': products, 'categories': categories}
     return render(request, 'shop/home.html', context)
 
 
@@ -19,3 +31,7 @@ def product_detail(request, product_id):
 
     except Product.DoesNotExist:
         return HttpResponse('Product Not Found')
+
+def order_detail(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+

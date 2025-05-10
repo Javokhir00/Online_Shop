@@ -3,7 +3,15 @@ from decimal import Decimal
 # Create your models here.
 
 
-class Category(models.Model):
+class BaseModel(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True
+
+
+class Category(BaseModel):
     title = models.CharField(max_length=100, unique = True)
 
     def __str__(self):
@@ -15,13 +23,15 @@ class Category(models.Model):
 
 
 
-class Product(models.Model):
+class Product(BaseModel):
     name = models.CharField(max_length=50)
     description = models.TextField(null = True, blank = True )
     price = models.DecimalField(max_digits=14, decimal_places=2)
     image = models.ImageField(upload_to = 'products/')
-    discount = models.IntegerField(default = 0)
+    discount = models.PositiveIntegerField(default = 0)
     category = models.ForeignKey(Category, related_name='products', on_delete= models.SET_NULL, null = True, blank = True)
+    amount = models.PositiveIntegerField(default = 0)
+
 
     def __str__(self):
         return self.name
@@ -43,3 +53,12 @@ class Product(models.Model):
         verbose_name_plural = 'Products'
         verbose_name = 'Product'
 
+
+class Order(BaseModel):
+    name = models.CharField(max_length=250)
+    phone = models.CharField(max_length=50)
+    quantity = models.PositiveIntegerField(default = 0)
+    product = models.ForeignKey(Product, related_name='orders', on_delete = models.CASCADE, null = True, blank = True)
+
+    def __str__(self):
+        return f'{self.name} - {self.quantity}'
