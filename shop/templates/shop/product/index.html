@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mahsulotlar</title>
+</head>
+<body>
+    <h1>Mahsulotlar Ro‘yxati</h1>
+    <ul>
+        {% for product in products %}
+            <li>
+                {{ product.name }} - {{ product.price }} so'm
+                <a href="{ url ('edit_product', product_id=product.id) }">Edit</a>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

@@ -1,4 +1,7 @@
 {%load static%}
+
+
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -25,12 +28,13 @@
                         <li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'index' %}">Home</a></li>
                         <li class="nav-item"><a class="nav-link" href="#!">About</a></li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Shop</a>
+                            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Categories</a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="#!">All Products</a></li>
+                                <li><a class="dropdown-item" href="{% url 'index' %}">All Products</a></li>
                                 <li><hr class="dropdown-divider" /></li>
-                                <li><a class="dropdown-item" href="#!">Popular Items</a></li>
-                                <li><a class="dropdown-item" href="#!">New Arrivals</a></li>
+                                {% for category in categories %}
+                                    <li><a class="dropdown-item" href="{% url 'category_in_detail' category.id %}">{{category.title}}</a></li>
+                                {% endfor %}
                             </ul>
                         </li>
                     </ul>
@@ -54,7 +58,17 @@
                             <img class="card-img-top mb-5 mb-md-0" src="{{product.get_absolute_url}}" alt="..." />
 
                     </div>
+
+
+
                     <div class="col-md-6">
+                        <a href="{{ url_for('edit_product', product_id=product.id) }}">
+                            <button type="button" class="btn btn-outline-primary">Edit</button>
+                        </a>
+                        <a href="{% url 'delete_product' product.id %}">
+                            <button type="button" class="btn btn-outline-danger">Delete</button><br>
+                        </a>
+
                         <div class="small mb-1">Quantity : {{product.amount}} </div>
                         <h1 class="display-5 fw-bolder">{{product.name}}</h1>
                         <div class="fs-5 mb-5">
@@ -88,8 +102,21 @@
 
 
                                   <div class="form-group mb-3">
-
                                     <input type="submit" class="btn btn-success" value="Send">
+                                  </div>
+                                  {% comment %} django messages {% endcomment %}
+                                  <div>
+
+                                    {% if messages %}
+                                    <div class="messages">
+                                        {% for message in messages %}
+                                            <div class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-danger{% endif %}">
+                                                {{ message }}
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+
                                   </div>
                               </form>
 
