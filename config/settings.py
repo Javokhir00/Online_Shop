@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,6 +40,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'shop',
 ]
+
+JAZZMIN_SETTINGS = {
+    "site_title": "Admin",
+    "site_header": "Admin",
+    "site_brand": "Online Shop",
+    "welcome_sign": "Welcome to the dashboard",
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

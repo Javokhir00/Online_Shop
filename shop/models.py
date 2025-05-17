@@ -62,3 +62,38 @@ class Order(BaseModel):
 
     def __str__(self):
         return f'{self.name} - {self.quantity}'
+
+
+class Comment(BaseModel):
+    class RatingChoices(models.IntegerChoices):
+        ZERO = 0
+        ONE = 1
+        TWO = 2
+        THREE = 3
+        FOUR = 4
+        FIVE = 5
+
+    name = models.CharField(max_length=250)
+    email = models.EmailField()
+    content = models.TextField()
+    product = models.ForeignKey(Product, related_name='comments', on_delete = models.CASCADE )
+    rating = models.PositiveIntegerField(choices=RatingChoices.choices, default=RatingChoices.THREE.value )
+
+    def __str__(self):
+        return f'{self.name} - {self.rating}'
+
+
+# class SortableBook(models.Model):
+#     title = models.CharField(
+#         "Title",
+#         max_length=255,
+#     )
+#
+#     my_order = models.PositiveIntegerField(
+#         default=0,
+#         blank=False,
+#         null=False,
+#     )
+#
+#     class Meta:
+#         ordering = ['my_order']

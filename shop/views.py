@@ -1,15 +1,36 @@
+from django.db.models.functions import Round
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.contrib import messages
-from shop.forms import OrderForm, ProductForm
+from shop.forms import OrderForm, ProductForm, CommentForm
 from shop.models import Product, Category
 from django.contrib.auth.decorators import login_required
-from flask import Flask, render_template, request, redirect, url_for
+from django.db.models import Avg
+
 # Create your views here.
+
+
+def filter_by(filter_type, products):
+
+    if filter_type == 'expensive':
+        products = products.order_by('-price')
+
+    elif filter_type == 'cheap':
+        products = products.order_by('price')
+
+
+    elif filter_type == 'rating':
+        products = products.order_by('-avg_rating')
+
+    return products
+
+
 
 def index(request, category_id = None):
     search_query = request.GET.get('q', '')
+    filter_type = request.GET.get('filter', '')
     categories = Category.objects.all()
+
 
     if category_id:
         products = Product.objects.filter(category = category_id)
@@ -20,9 +41,16 @@ def index(request, category_id = None):
         products = products.filter(name__icontains = search_query)
 
 
+    products = products.annotate(avg_rating = Round(Avg('comments__rating'), precision = 2))
+
+    products = filter_by(filter_type, products)
+
 
     context = {'products': products, 'categories': categories}
     return render(request, 'shop/home.html',  context)
+
+
+
 
 def category_in_detail(request, category_id = None):
     categories = Category.objects.all()
@@ -63,7 +91,7 @@ def order_detail(request, pk):
 
 
     context = {'product': product, 'form': form}
-    return render(request, 'shop/order_detail.html', context = context)
+    return render(request, 'shop/detail.html', context = context)
 
 
 
@@ -92,31 +120,35 @@ def delete_product(request, pk):
     return render(request, 'shop/product/delete.html', {'product': product})
 
 
-
-
-
-
-app = Flask(__name__)
-
-products = Product.objects.all()
-
-@app.route('/edit/<int:product_id>', methods=['GET'])
-def edit_product(product_id):
-    product = next((p for p in products if p["id"] == product_id), None)
-    if product:
-        return render_template('edit.html', product=product)
+@login_required
+def edit_product(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    form = ProductForm(instance=product)
+    if request.method == 'POST':
+        form = ProductForm(request.POST, request.FILES, instance=product)
+        if form.is_valid():
+            form.save()
+            return redirect('product_detail', pk)
     else:
-        return "Product not found", 404
+        form = ProductForm(instance=product)
+
+    context = {'form': form}
+    return render(request, 'shop/detail.html', context)
 
 
-@app.route('/edit/<int:product_id>', methods=['POST'])
-def update_product(product_id):
-    product = next((p for p in products if p["id"] == product_id), None)
-    if product:
-        product["name"] = request.form['name']
-        product["description"] = request.form['description']
-        product["price"] = float(request.form['price'])
-        return redirect(url_for('home'))
-    else:
-        return "Product not found", 404
+def comment_create(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    form = CommentForm()
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.product = product
+            comment.save()
+            return redirect('product_detail', pk)
+
+    context = {'form': form}
+    return render(request, 'shop/detail.html', context)
+
+
 
