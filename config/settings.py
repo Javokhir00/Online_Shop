@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -39,7 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'shop',
+    'adminsortable2',
 ]
+
 
 JAZZMIN_SETTINGS = {
     "site_title": "Admin",
@@ -47,6 +50,30 @@ JAZZMIN_SETTINGS = {
     "site_brand": "Online Shop",
     "welcome_sign": "Welcome to the dashboard",
 }
+
+
+# BATON = {
+#     'SITE_HEADER': 'My Custom Admin',
+#     'SITE_TITLE': 'Admin Portal',
+#     'INDEX_TITLE': 'Dashboard',
+#     'SUPPORT_HREF': 'https://yourcompany.com/support',
+#     'COPYRIGHT': 'yourcompany.com',
+#     'POWERED_BY': 'Django & Baton',
+#     'SHOW_MULTIPART_UPLOADING': True,
+#     'CONFIRM_UNSAVED_CHANGES': True,
+#     'ENABLE_IMAGES_PREVIEW': True,
+# }
+
+
+
+
+
+
+
+
+
+
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -57,6 +84,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
 
 ROOT_URLCONF = 'config.urls'
 

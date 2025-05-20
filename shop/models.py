@@ -6,6 +6,11 @@ from decimal import Decimal
 class BaseModel(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    my_order = models.PositiveIntegerField(
+        default=0,
+        null=True,
+        blank=True
+    )
 
     class Meta:
         abstract = True
@@ -20,6 +25,7 @@ class Category(BaseModel):
     class Meta:
         verbose_name_plural = 'Categories'
         verbose_name = 'Category'
+        ordering = ['my_order']
 
 
 
@@ -52,6 +58,7 @@ class Product(BaseModel):
     class Meta:
         verbose_name_plural = 'Products'
         verbose_name = 'Product'
+        ordering = ['my_order']
 
 
 class Order(BaseModel):
@@ -83,17 +90,3 @@ class Comment(BaseModel):
         return f'{self.name} - {self.rating}'
 
 
-# class SortableBook(models.Model):
-#     title = models.CharField(
-#         "Title",
-#         max_length=255,
-#     )
-#
-#     my_order = models.PositiveIntegerField(
-#         default=0,
-#         blank=False,
-#         null=False,
-#     )
-#
-#     class Meta:
-#         ordering = ['my_order']

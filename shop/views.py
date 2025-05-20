@@ -1,11 +1,12 @@
-from django.db.models.functions import Round
-from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse
+from django.shortcuts import render,redirect
+from .models import Product,Category
 from django.contrib import messages
-from shop.forms import OrderForm, ProductForm, CommentForm
-from shop.models import Product, Category
+from django.http.response import HttpResponse
+from django.shortcuts import get_object_or_404
+from .forms import OrderForm,ProductForm,CommentForm
 from django.contrib.auth.decorators import login_required
 from django.db.models import Avg
+from django.db.models.functions import Round
 
 # Create your views here.
 
