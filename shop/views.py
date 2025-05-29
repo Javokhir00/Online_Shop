@@ -67,7 +67,9 @@ def category_in_detail(request, category_id = None):
 def product_detail(request, product_id):
     try:
         product = Product.objects.get(id=product_id)
-        context = {'product': product}
+        related_products = Product.objects.filter(category = product.category).exclude(id = product.id)
+        context = {'product': product,
+                   'related_products': related_products,}
         return render(request, 'shop/detail.html', context)
 
     except Product.DoesNotExist:
@@ -88,7 +90,7 @@ def order_detail(request, pk):
                 product.save()
                 order.save()
                 messages.add_message(request, messages.SUCCESS, 'Order succesfully created')
-                return redirect('product_detail', pk)
+                return redirect('shop:product_detail', pk)
 
 
     context = {'product': product, 'form': form}
@@ -104,7 +106,7 @@ def create_product(request):
         form = ProductForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            return redirect('index')
+            return redirect('shop:index')
 
     context = {'form': form}
     return render(request, 'shop/product/create.html', context)
@@ -153,3 +155,9 @@ def comment_create(request, pk):
 
 
 
+def login_page(request):
+    pass
+
+
+def logout_page(request):
+    pass

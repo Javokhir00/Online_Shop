@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'shop',
     'adminsortable2',
+    'widget_tweaks',
+    'users'
 ]
 
 
@@ -50,29 +52,6 @@ JAZZMIN_SETTINGS = {
     "site_brand": "Online Shop",
     "welcome_sign": "Welcome to the dashboard",
 }
-
-
-# BATON = {
-#     'SITE_HEADER': 'My Custom Admin',
-#     'SITE_TITLE': 'Admin Portal',
-#     'INDEX_TITLE': 'Dashboard',
-#     'SUPPORT_HREF': 'https://yourcompany.com/support',
-#     'COPYRIGHT': 'yourcompany.com',
-#     'POWERED_BY': 'Django & Baton',
-#     'SHOW_MULTIPART_UPLOADING': True,
-#     'CONFIRM_UNSAVED_CHANGES': True,
-#     'ENABLE_IMAGES_PREVIEW': True,
-# }
-
-
-
-
-
-
-
-
-
-
 
 
 MIDDLEWARE = [
@@ -163,3 +142,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR / 'media')
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL = 'users.User'
